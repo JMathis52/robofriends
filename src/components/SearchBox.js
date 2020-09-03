@@ -1,17 +1,15 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
-const SearchBox = ({ searchField, searchChange }) => {
-
-    return (
-        <Fragment>
-            <input
-                className="pa3 ba b--green bg-lightest-blue"
-                type="search" 
-                placeholder="Search robots" 
-                onChange={searchChange}
-            />
-        </Fragment>
-    )
-}
+const SearchBox = ({ searchChange }) => {
+  return (
+    <input
+      aria-label="Search Robots"
+      className="pa3 ba br2 b--green bg-lightest-blue"
+      type="search"
+      placeholder="Search robots"
+      onChange={searchChange}
+    />
+  );
+};
 
 export default SearchBox;

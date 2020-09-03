@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SearchBox from './SearchBox';
 
 class Header extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -6,7 +7,12 @@ class Header extends Component {
   }
 
   render() {
-    return <h1 className="f1">RoboFriends</h1>;
+    return (
+      <div className="flex flex-column items-center justify-center vh-25">
+        <h1 className="f2">RoboFriends</h1>
+        <SearchBox searchChange={this.props.searchChange} />
+      </div>
+    );
   }
 }
 

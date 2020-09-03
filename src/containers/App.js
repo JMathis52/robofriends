@@ -5,7 +5,6 @@ import CardList from '../components/CardList';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Header from '../components/Header';
 import Scroll from '../components/Scroll';
-import SearchBox from '../components/SearchBox';
 import './App.css';
 
 const mapStateToProps = (state) => {
@@ -39,8 +38,7 @@ class App extends Component {
       <h1 className="tc">LOADING</h1>
     ) : (
       <div className="tc">
-        <Header />
-        <SearchBox searchChange={onSearchChange} />
+        <Header searchChange={onSearchChange} />
         <Scroll>
           <ErrorBoundary>
             <CardList robots={filteredRobots} />
