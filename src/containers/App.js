@@ -1,52 +1,47 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { requestRobots, setSearchField } from '../actions';
+import React, { useState, useEffect } from 'react';
 import CardList from '../components/CardList';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Header from '../components/Header';
 import Scroll from '../components/Scroll';
 import './App.css';
 
-const mapStateToProps = (state) => {
-  return {
-    searchField: state.searchRobots.searchField,
-    robots: state.requestRobots.robots,
-    isPending: state.requestRobots.isPending,
-    error: state.requestRobots.error,
-  };
-};
+function App() {
+  const [searchField, setSearchField] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [robots, setRobots] = useState([]);
+  const [filteredRobots, setFilteredRobots] = useState(robots);
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
-    onRequestRobots: () => dispatch(requestRobots()),
-  };
-};
+  useEffect(() => {
+    fetch('https://fakerapi.it/api/v1/persons')
+      .then((res) => res.json())
+      .then((data) => {
+        setRobots(data.data);
+        setIsLoading(false);
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onRequestRobots();
-  }
-
-  render() {
-    const { searchField, onSearchChange, robots, isPending } = this.props;
-    const filteredRobots = robots.filter((robot) => {
-      return robot.name.toLowerCase().includes(searchField.toLowerCase());
-    });
-
-    return isPending ? (
-      <h1 className="tc">LOADING</h1>
-    ) : (
-      <div className="tc">
-        <Header searchChange={onSearchChange} />
-        <Scroll>
-          <ErrorBoundary>
-            <CardList robots={filteredRobots} />
-          </ErrorBoundary>
-        </Scroll>
-      </div>
+  useEffect(() => {
+    setFilteredRobots(
+      robots.filter((robot) => {
+        const name = robot.firstname + ' ' + robot.lastname;
+        return name.toLowerCase().includes(searchField.toLowerCase());
+      })
     );
-  }
+  }, [robots, searchField]);
+
+  return isLoading ? (
+    <h1 className='tc'>LOADING</h1>
+  ) : (
+    <div className='tc'>
+      <Header searchChange={(e) => setSearchField(e.target.value)} />
+      <Scroll>
+        <ErrorBoundary>
+          <CardList robots={filteredRobots} />
+        </ErrorBoundary>
+      </Scroll>
+    </div>
+  );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
